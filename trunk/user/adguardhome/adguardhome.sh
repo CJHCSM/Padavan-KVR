@@ -117,7 +117,7 @@ find_bin() {
 SVC_PATH="$(nvram get adg_bin)"
 
 dirs="/etc/storage/bin
-/tmp/AdGuardHome
+/media/AiDisk_a1/AdGuardHome
 /usr/bin"
 
 if [ -z "$SVC_PATH" ] ; then
@@ -128,7 +128,7 @@ if [ -z "$SVC_PATH" ] ; then
         break
     fi
   done
-  [ -z "$SVC_PATH" ] && SVC_PATH="/tmp/AdGuardHome/AdGuardHome"
+  [ -z "$SVC_PATH" ] && SVC_PATH="/media/AiDisk_a1/AdGuardHome/AdGuardHome"
 fi
 }
 
@@ -164,10 +164,10 @@ dl_adg() {
 			length=`expr $length / 1048576`
  			adg_size0="$(check_disk_size $adg_path)"
  			[ ! -z "$length" ] && logger -t "【AdGuardHome】" "程序大小 ${length}M， 程序路径可用空间 ${adg_size0}M "
-			curl -Lkso "/tmp/AdGuardHome/AdGuardHome.tar.gz" "${proxy}https://github.com/AdguardTeam/AdGuardHome/releases/download/${tag}/AdGuardHome_linux_mipsle_softfloat.tar.gz" || wget --no-check-certificate -q -O "/tmp/AdGuardHome/AdGuardHome.tar.gz" "${proxy}https://github.com/AdguardTeam/AdGuardHome/releases/download/${tag}/AdGuardHome_linux_mipsle_softfloat.tar.gz"
+			curl -Lkso "/media/AiDisk_a1/AdGuardHome/AdGuardHome.tar.gz" "${proxy}https://github.com/AdguardTeam/AdGuardHome/releases/download/${tag}/AdGuardHome_linux_mipsle_softfloat.tar.gz" || wget --no-check-certificate -q -O "/media/AiDisk_a1/AdGuardHome/AdGuardHome.tar.gz" "${proxy}https://github.com/AdguardTeam/AdGuardHome/releases/download/${tag}/AdGuardHome_linux_mipsle_softfloat.tar.gz"
 			if [ "$?" = 0 ] ; then
-				tar -xzvf /tmp/AdGuardHome/AdGuardHome.tar.gz -C $adg_path
-    				rm -f /tmp/AdGuardHome/AdGuardHome.tar.gz
+				tar -xzvf /media/AiDisk_a1/AdGuardHome/AdGuardHome.tar.gz -C $adg_path
+    				rm -f /media/AiDisk_a1/AdGuardHome/AdGuardHome.tar.gz
 		 		cd ${adg_path} ; rm -f ./LICENSE.txt./README.md ./CHANGELOG.md ./AdGuardHome.sig
 		 		chmod +x $SVC_PATH
 				if [[ "$($SVC_PATH -h 2>&1 | wc -l)" -gt 3 ]] ; then
@@ -197,8 +197,8 @@ adg_keep() {
 }
 
 start_adg() {
-  mkdir -p /tmp/AdGuardHome
-  mkdir -p /etc/storage/AdGuardHome
+  mkdir -p /media/AiDisk_a1/AdGuardHome
+  mkdir -p /media/AiDisk_a1/AdGuardHome
   logger -t "【AdGuardHome】" "正在启动..."
   sed -Ei '/【AdGuardHome】|^$/d' /tmp/script/_opt_script_check
   find_bin
@@ -214,7 +214,7 @@ start_adg() {
   set_iptable
   logger -t "【AdGuardHome】" "运行 $SVC_PATH"
   [ ! -x "$SVC_PATH" ] && chmod +x $SVC_PATH
-  eval "$SVC_PATH -c $adg_file -w /tmp/AdGuardHome -v" &
+  eval "$SVC_PATH -c $adg_file -w /media/AiDisk_a1/AdGuardHome -v" &
   sleep 4
   	if [ ! -z "`pidof AdGuardHome`" ] ; then
  		mem=$(cat /proc/$(pidof AdGuardHome)/status | grep -w VmRSS | awk '{printf "%.1f MB", $2/1024}')
@@ -237,7 +237,7 @@ start_adg() {
 stop_adg() {
 scriptname=$(basename $0)
 sed -Ei '/【AdGuardHome】|^$/d' /tmp/script/_opt_script_check
-rm -rf /tmp/AdGuardHome
+rm -rf /media/AiDisk_a1/AdGuardHome
 killall -9 AdGuardHome
 killall AdGuardHome
 del_dns
